@@ -213,7 +213,8 @@ bool logFile(String str) {
         file.close();
         return false;
     } else {
-        file.println(str);
+        String numberString = String(getFileNumber());
+        file.println(numberString + " : " + str);
     }
     // Close the file
     file.close();
@@ -233,7 +234,7 @@ void setup() {
 
     // Initialize the camera
     Serial.print("Initializing the camera module...");
-    logFile("Initializing the camera module on picture number: " + getFileNumber());
+    logFile("Initializing the camera module");
     configESPCamera();
     Serial.println("Camera OK!");
 
