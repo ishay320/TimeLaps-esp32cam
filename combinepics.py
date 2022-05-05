@@ -30,7 +30,6 @@ def argument_handling():
     args = parser.parse_args()
     return args.i, args.o
 
-
 if __name__ == "__main__":
     input_folder, output_folder = argument_handling()
     show_images(input_folder,output_folder)
