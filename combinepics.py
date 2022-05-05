@@ -11,7 +11,7 @@ def show_images(input_folder,output_folder):
     img_array = []
 
     while(counter < len(images)):
-        for i in range(5):
+        for _ in range(5):
             with open(images[counter], 'rb') as file:
                 print(images[counter], "  percentage: ", "{:.3f}".format((counter / len(images)) * 100))
                 pix = np.asarray(Image.open(file))
@@ -19,7 +19,7 @@ def show_images(input_folder,output_folder):
             counter += 1
         combined = np.mean(img_array, axis=0)
         combined_normelized = combined.astype(np.uint8)
-        Image.fromarray(combined_normelized).save(output_folder + "\\" + str(set_counter) + ".jpg")
+        Image.fromarray(combined_normelized).save(output_folder + "\\" + str(set_counter).zfill(6) + ".jpg")
         img_array = []
         set_counter += 1
 
