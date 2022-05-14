@@ -2,9 +2,17 @@
 
 # The files
 
-| name | what it dose |
+| name | What it does |
 |------|--------------|
-| `main.cpp` | - the code for esp32 |
-| `dependency.bat` | installs python virtual env with `requirements.txt` |
-| `combinepics.py` | code to combine the pics |
-| `gst.txt` | snippet for gstreamer | 
+| `main.cpp` | The code for esp32 |
+| `dependency.bat` | Installs python virtual env with `requirements.txt` |
+| `combinepics.py` | Code to combine the pics |
+| `gst.txt` | Snippet for gstreamer | 
+
+# Installation
+1. Make sure that the virtual env is not in the main folder (bug in pio).
+1. Use `platformIO` to install the `main.cpp` file on the esp32.
+1. Connect the esp32 to power with sd card installed and it will run.
+1. Run `dependency.bat` to install the virtual env.
+1. Run `dependency.py` to combine the photos.
+1. Run Gstreamer to combine the photos to video.
