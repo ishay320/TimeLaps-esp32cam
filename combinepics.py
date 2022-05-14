@@ -1,10 +1,10 @@
-import multiprocessing
 from typing import List
 import numpy as np
 import glob
 from PIL import Image
 import argparse
 from multiprocessing import Pool
+from tqdm import tqdm
 
 
 def readImagesToList(names: List[str]) -> list:
@@ -57,24 +57,18 @@ def show_images(input_folder, output_folder):
     for i in zip(out_names, img_array):
         print(i)
 
-    ## TODO: add progress
-    # Running the pool
-    with multiprocessing.Pool(processes=8) as pool:
-        results = pool.starmap(meanImages, zip(img_array, out_names))
-    print(len(results))
-
-    # while(counter < len(images)):
-    #     for _ in range(5):
-    #         with open(images[counter], 'rb') as file:
-    #             print(images[counter], "  percentage: ", "{:.3f}".format((counter / len(images)) * 100))
-    #             pix = np.asarray(Image.open(file))
-    #             img_array.append(pix)
-    #         counter += 1
-    #     combined = np.mean(img_array, axis=0)
-    #     combined_normelized = combined.astype(np.uint8)
-    #     Image.fromarray(combined_normelized).save(output_folder + "\\" + str(set_counter).zfill(6) + ".jpg")
-    #     img_array = []
-    #     set_counter += 1
+    # Pool
+    pool = Pool(processes=4)
+    jobs = [
+        pool.apply_async(func=meanImages, args=(*argument,))
+        if isinstance(argument, tuple)
+        else pool.apply_async(func=meanImages, args=(argument,))
+        for argument in zip(img_array, out_names)
+    ]
+    pool.close()
+    result_list_tqdm = []
+    for job in tqdm(jobs):
+        result_list_tqdm.append(job.get())
 
 
 def argument_handling():
