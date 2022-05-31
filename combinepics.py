@@ -36,7 +36,7 @@ def addImages(names: List[str], out_name: str):
     Image.fromarray(combined_normelized).save(out_name)
 
 
-def show_images(input_folder, output_folder, combine_num=5, processes=4):
+def show_images(input_folder, output_folder, combine_num=5, processes=8):
     """
     process the folder photos
     """
