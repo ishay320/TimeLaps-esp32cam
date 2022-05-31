@@ -5,42 +5,46 @@ from PIL import Image
 import argparse
 from multiprocessing import Pool
 from tqdm import tqdm
-
-
-def readImagesToList(names: List[str]) -> list:
-    img_array = []
-    for name in names:
-        with open(name, "rb") as file:
-            pix = np.asarray(Image.open(file))
-            img_array.append(pix)
-    return img_array
+from utils import readImagesToList
 
 
 def meanImages(names: List[str], out_name: str):
+    """
+    do mean on the list of images and save it
+    """
     img_array = readImagesToList(names)
 
+    # Do the calculations
     combined = np.mean(img_array, axis=0)
     combined_normelized = combined.astype(np.uint8)
+
+    # Save
     Image.fromarray(combined_normelized).save(out_name)
 
 
 def addImages(names: List[str], out_name: str):
+    """
+    add all the images on the list and save it
+    """
     img_array = readImagesToList(names)
 
+    # Do the calculations
     combined = np.add(img_array, axis=0)
     combined_normelized = combined.astype(np.uint8)
+
+    # Save
     Image.fromarray(combined_normelized).save(out_name)
 
-    # pool = Pool()                         # Create a multiprocessing Pool
-    # pool.map(process_image, data_inputs)  # process data_inputs iterable with pool
 
-
-def show_images(input_folder, output_folder):
+def show_images(input_folder, output_folder, combine_num=5, processes=4):
+    """
+    process the folder photos
+    """
     print(input_folder + "/*.jpg")
     images = glob.glob(input_folder + "/*.jpg")
 
-    # For pool
-    counter = 0  # For output names
+    # cut the list for the pool
+    counter = 0  # names for output
     set_counter = 0  # count the sets
     img_array = []  # Array of input name sized set
     tmp_arr = []  # set array
@@ -49,16 +53,14 @@ def show_images(input_folder, output_folder):
         tmp_arr += [name]
         set_counter += 1
 
-        if set_counter % 5 == 0:
+        if set_counter % combine_num == 0:
             out_names += [output_folder + "\\" + str(counter).zfill(6) + ".jpg"]
             counter += 1
             img_array += [tmp_arr]
             tmp_arr = []
-    for i in zip(out_names, img_array):
-        print(i)
 
     # Pool
-    pool = Pool(processes=4)
+    pool = Pool(processes=processes)
     jobs = [
         pool.apply_async(func=meanImages, args=(*argument,))
         if isinstance(argument, tuple)
@@ -72,6 +74,9 @@ def show_images(input_folder, output_folder):
 
 
 def argument_handling():
+    """
+    returns the argument of the user - input folder and output file
+    """
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "-i", required=True, type=str, help="Insert path to the folder of the files"
