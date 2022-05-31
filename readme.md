@@ -8,6 +8,7 @@
 | `dependency.bat` | Installs python virtual env with `requirements.txt` |
 | `combinepics.py` | Code to combine the pics |
 | `gst.txt` | Snippet for gstreamer | 
+| `light_trace.py` | Code to combine pics to light path |
 
 # Installation
 1. Make sure that the virtual env is not in the main folder (bug in pio).
