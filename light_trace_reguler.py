@@ -4,7 +4,6 @@ import numpy as np
 from PIL import Image
 import argparse
 import cv2
-import concurrent.futures
 
 
 def argument_handling():
@@ -54,36 +53,15 @@ def process_multi(input_folder: str):
     # Get size of images for main array
     main_frame = np.asarray(np.array(Image.open(images_name[0])).shape[0:1])
 
-    # Start with multithread
-    threads_num = 8
-    with concurrent.futures.ThreadPoolExecutor(threads_num) as executor:
-        list_part = len(images_name) / threads_num
-        futures = [
-            executor.submit(
-                batch_process,
-                images_name[
-                    int(i * list_part) : min(int((i + 1) * list_part), len(images_name))
-                ],
-            )
-            for i in range(threads_num)
-        ]  # submit return a "future result".
+    # run on the files and process
+    for i, image_name in enumerate(images_name):
+        image = Image.open(image_name)
+        thresh = image_to_light_threshold(image)
+        main_frame = main_frame + thresh
+        # print(f"done: {i/len(images_name)}\tdoing: {image_name}")
 
-        for res in concurrent.futures.as_completed(
-            futures
-        ):  # return each result as soon as it is completed:
-            r = res.result()
-            if r is None:
-                continue
-            print("thread done ")
-            main_frame = main_frame + r
-
-    # main_frame = np.asarray(np.array(Image.open(images_name[0])).shape[0:1])
-    # for i, image_name in enumerate(images_name):
-    #     image = Image.open(image_name)
-    #     thresh = image_to_light_threshold(image)
-    #     main_frame = main_frame + thresh
-    #     print(f"done: {i/len(images_name)}\tdoing: {image_name}")
-    # main_frame = main_frame / len(images_name)
+    # Normalize
+    main_frame = main_frame / len(images_name)
     return main_frame
 
 

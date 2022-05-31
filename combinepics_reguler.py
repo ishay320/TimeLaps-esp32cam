@@ -3,8 +3,6 @@ import numpy as np
 import glob
 from PIL import Image
 import argparse
-from multiprocessing import Pool
-from tqdm import tqdm
 from utils import readImagesToList
 
 
@@ -36,7 +34,7 @@ def addImages(names: List[str], out_name: str):
     Image.fromarray(combined_normelized).save(out_name)
 
 
-def show_images(input_folder, output_folder, combine_num=5, processes=4):
+def show_images(input_folder, output_folder, combine_num=5):
     """
     process the folder photos
     """
@@ -58,20 +56,8 @@ def show_images(input_folder, output_folder, combine_num=5, processes=4):
             counter += 1
             img_array += [tmp_arr]
             tmp_arr = []
-
-    # Pool
-    pool = Pool(processes=processes)
-    jobs = [
-        pool.apply_async(func=meanImages, args=(*argument,))
-        if isinstance(argument, tuple)
-        else pool.apply_async(func=meanImages, args=(argument,))
-        for argument in zip(img_array, out_names)
-    ]
-    pool.close()
-    result_list_tqdm = []
-    for job in jobs:
-        result_list_tqdm.append(job.get())
-
+    for arg in zip(img_array, out_names):
+        meanImages(*arg)
 
 def argument_handling():
     """
@@ -87,11 +73,9 @@ def argument_handling():
     args = parser.parse_args()
     return args.i, args.o
 
-
 def main(input_folder = None, output_folder = None):
     if input_folder is None and output_folder is None:
         input_folder, output_folder = argument_handling()
-
     show_images(input_folder, output_folder)
 
 if __name__ == "__main__":
