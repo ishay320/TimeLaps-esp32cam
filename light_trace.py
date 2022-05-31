@@ -22,24 +22,11 @@ def argument_handling():
     return args.i, args.o
 
 
-def readImagesToList(names: List[str]) -> list:
-    '''
-    load images from names to list
-    and returns list of images
-    '''
-    img_array = []
-    for name in names:
-        with open(name, "rb") as file:
-            pix = np.asarray(Image.open(file))
-            img_array.append(pix)
-    return img_array
-
-
 def batch_process(names: List[str]) -> np._NdArraySubClass:
-    '''
+    """
     gets list of names and process them
     returns the processed image
-    '''
+    """
     # Check if empty
     if len(names) == 0:
         return None
@@ -57,10 +44,10 @@ def batch_process(names: List[str]) -> np._NdArraySubClass:
     return main_frame
 
 
-def process_multi(input_folder:str):
-    '''
-    process the folder photos and output processed frame 
-    '''
+def process_multi(input_folder: str):
+    """
+    process the folder photos and output processed frame
+    """
     print(input_folder + "/*.jpg")
     images_name = glob.glob(input_folder + "/*.jpg")
 
@@ -101,9 +88,9 @@ def process_multi(input_folder:str):
 
 
 def image_to_light_threshold(image) -> cv2.Mat:
-    '''
-    gets image and output image of where the sun light is 
-    '''
+    """
+    gets image and output image of where the sun light is
+    """
     # Convert image to HSV
     frame_HSV = cv2.cvtColor(np.array(image), cv2.COLOR_BGR2HSV)
 
