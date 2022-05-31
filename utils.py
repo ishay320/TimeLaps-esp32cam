@@ -3,7 +3,7 @@ import numpy as np
 from PIL import Image
 
 
-def readImagesToList(names: List[str]) -> list:
+def readImagesToList(names: List(str)) -> List:
     """
     load images from names to list
     and returns list of images

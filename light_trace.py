@@ -22,7 +22,7 @@ def argument_handling():
     return args.i, args.o
 
 
-def batch_process(names: List[str]) -> np._NdArraySubClass:
+def batch_process(names: List[str]) -> List:
     """
     gets list of names and process them
     returns the processed image
@@ -110,5 +110,5 @@ if __name__ == "__main__":
     # Normalization
     image /= image.max() / 1
     cv2.imshow("normal", np.array(image))
-    cv2.imwrite(f"{out_file}light.png", image * 255)
+    cv2.imwrite(f"{out_file}/light.png", image * 255)
     cv2.waitKey(0)
